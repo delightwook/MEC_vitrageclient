@@ -1,0 +1,20 @@
+[console_scripts]
+vitrage = vitrageclient.shell:main
+
+[keystoneauth1.plugin]
+vitrage-keycloak = vitrageclient.auth:VitrageKeycloakLoader
+vitrage-noauth = vitrageclient.auth:VitrageNoAuthLoader
+
+[openstack.cli.extension]
+rca = vitrageclient.osc
+
+[openstack.rca.v1]
+rca_alarm_list = vitrageclient.v1.cli.alarm:AlarmList
+rca_resource_list = vitrageclient.v1.cli.resource:ResourceList
+rca_resource_show = vitrageclient.v1.cli.resource:ResourceShow
+rca_show = vitrageclient.v1.cli.rca:RcaShow
+rca_template_list = vitrageclient.v1.cli.template:TemplateList
+rca_template_show = vitrageclient.v1.cli.template:TemplateShow
+rca_template_validate = vitrageclient.v1.cli.template:TemplateValidate
+rca_topology_show = vitrageclient.v1.cli.topology:TopologyShow
+

@@ -1,0 +1,70 @@
+_vitrage()
+{
+  local cur prev words
+  COMPREPLY=()
+  _get_comp_words_by_ref -n : cur prev words
+
+  # Command data:
+  cmds='alarm complete event healthcheck help rca resource template topology'
+  cmds_alarm='list show count'
+  cmds_alarm_list='-h --help -f --format -c --column --max-width --print-empty --noindent --quote --all-tenants'
+  cmds_alarm_count='-h --help -f --format -c --column --max-width --print-empty --noindent --quote --all-tenants'
+  cmds_alarm_show='-h --help'
+  cmds_complete='-h --help --name --shell'
+  cmds_event='post'
+  cmds_event_post='-h --help --type --time --details'
+  cmds_healthcheck='-h --help -f --format -c --column --max-width --print-empty --noindent --variable --prefix'
+  cmds_help='-h --help'
+  cmds_rca='show'
+  cmds_rca_show='-h --help -f --format -c --column --max-width --print-empty --noindent --variable --prefix --all-tenants'
+  cmds_resource='list show'
+  cmds_resource_list='-h --help -f --format -c --column --max-width --print-empty --noindent --quote --type --all-tenants'
+  cmds_resource_show='-h --help -f --format -c --column --max-width --print-empty --noindent --variable --prefix'
+  cmds_template='list show validate add delete'
+  cmds_template_add='-h --help --path --type'
+  cmds_template_delete='-h --help'
+  cmds_template_list='-h --help -f --format -c --column --max-width --print-empty --noindent --quote'
+  cmds_template_show='-h --help -f --format -c --column --max-width --print-empty --noindent --variable --prefix'
+  cmds_template_validate='-h --help -f --format -c --column --max-width --print-empty --noindent --variable --prefix --path'
+  cmds_topology='show'
+  cmds_topology_show='-h --help -f --format -c --column --max-width --print-empty --noindent --variable --prefix --filter --limit --root --graph-type --all-tenants'
+
+  dash=-
+  underscore=_
+  cmd=""
+  words[0]=""
+  completed="${cmds}"
+  for var in "${words[@]:1}"
+  do
+    if [[ ${var} == -* ]] ; then
+      break
+    fi
+    if [ -z "${cmd}" ] ; then
+      proposed="${var}"
+    else
+      proposed="${cmd}_${var}"
+    fi
+    local i="cmds_${proposed}"
+    i=${i//$dash/$underscore}
+    local comp="${!i}"
+    if [ -z "${comp}" ] ; then
+      break
+    fi
+    if [[ ${comp} == -* ]] ; then
+      if [[ ${cur} != -* ]] ; then
+        completed=""
+        break
+      fi
+    fi
+    cmd="${proposed}"
+    completed="${comp}"
+  done
+
+  if [ -z "${completed}" ] ; then
+    COMPREPLY=( $( compgen -f -- "$cur" ) $( compgen -d -- "$cur" ) )
+  else
+    COMPREPLY=( $(compgen -W "${completed}" -- ${cur}) )
+  fi
+  return 0
+}
+complete -F _vitrage vitrage
